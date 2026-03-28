@@ -1,0 +1,31 @@
+{
+  "name": "the-resin-world-server",
+  "version": "1.0.0",
+  "description": "Backend API for The Resin World E-commerce",
+  "main": "models/server.js",
+  "scripts": {
+    "start": "node models/server.js",
+    "dev": "nodemon models/server.js",
+    "seed:admin": "node models/seedAdmin.js"
+  },
+  "keywords": ["ecommerce", "resin", "api", "nodejs", "express"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.41.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "nodemailer": "^6.9.7",
+    "razorpay": "^2.9.2",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

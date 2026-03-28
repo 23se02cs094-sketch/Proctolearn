@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Cancelled</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+        .header { background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { margin: 0; font-size: 28px; }
+        .content { padding: 30px; }
+        .content h2 { color: #333; }
+        .content p { color: #666; line-height: 1.6; }
+        .cancel-box { background-color: #f8d7da; border-left: 4px solid #dc3545; padding: 20px; margin: 20px 0; }
+        .button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+        .footer { background-color: #f8f9fa; padding: 20px; text-align: center; color: #999; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>❌ Order Cancelled</h1>
+        </div>
+        <div class="content">
+            <h2>Hi {{name}},</h2>
+            <p>Your order has been cancelled as requested.</p>
+            
+            <div class="cancel-box">
+                <p style="margin: 0;"><strong>Order ID:</strong> {{orderId}}</p>
+                <p style="margin: 10px 0 0 0;"><strong>Reason:</strong> {{reason}}</p>
+            </div>
+
+            <p>If you paid online, the refund will be processed within 5-7 business days.</p>
+            
+            <p>We're sorry to see you go! If you changed your mind or had any issues, we'd love to hear from you.</p>
+            
+            <p style="text-align: center;">
+                <a href="{{frontendUrl}}/products" class="button">Continue Shopping</a>
+            </p>
+            
+            <p>Best regards,<br>The Resin World Team</p>
+        </div>
+        <div class="footer">
+            <p>© 2024 The Resin World. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

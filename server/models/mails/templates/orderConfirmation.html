@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+        .header { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { margin: 0; font-size: 28px; }
+        .content { padding: 30px; }
+        .content h2 { color: #333; }
+        .content p { color: #666; line-height: 1.6; }
+        .order-box { background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 20px 0; }
+        .order-id { font-size: 18px; font-weight: bold; color: #28a745; }
+        .divider { border-top: 1px dashed #dee2e6; margin: 15px 0; }
+        .item { display: flex; justify-content: space-between; padding: 10px 0; }
+        .total { font-size: 18px; font-weight: bold; color: #333; }
+        .address-box { background-color: #e9ecef; border-radius: 5px; padding: 15px; margin-top: 15px; }
+        .footer { background-color: #f8f9fa; padding: 20px; text-align: center; color: #999; font-size: 12px; }
+        .button { display: inline-block; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 14px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ Order Confirmed!</h1>
+            <p>Thank you for your purchase</p>
+        </div>
+        <div class="content">
+            <h2>Hello {{name}}!</h2>
+            <p>Great news! Your order has been confirmed and is being processed.</p>
+            
+            <div class="order-box">
+                <p class="order-id">Order ID: {{orderId}}</p>
+                <div class="divider"></div>
+                <p><strong>Order Summary</strong></p>
+                <p>Your order is being prepared with care. You will receive tracking information once your order ships.</p>
+                <div class="divider"></div>
+                <div class="total">
+                    <span>Total Amount:</span>
+                    <span style="float: right;">₹{{totalPrice}}</span>
+                </div>
+            </div>
+
+            <p style="text-align: center;">
+                <a href="{{frontendUrl}}/orders" class="button">View Order Details</a>
+            </p>
+            
+            <p>If you have any questions about your order, feel free to reach out to our support team.</p>
+            <p>Happy Shopping!<br>The Resin World Team</p>
+        </div>
+        <div class="footer">
+            <p>© 2024 The Resin World. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
