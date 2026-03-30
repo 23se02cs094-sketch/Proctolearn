@@ -58,7 +58,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
 // File upload handling (Cloudinary)
-const tempUploadDir = path.join(__dirname, 'tmp');
+const tempUploadDir = process.env.VERCEL === '1' ? '/tmp' : path.join(__dirname, 'tmp');
 if (!fs.existsSync(tempUploadDir)) {
     fs.mkdirSync(tempUploadDir, { recursive: true });
 }

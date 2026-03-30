@@ -666,8 +666,15 @@ exports.createCategory = async (req, res) => {
         
         const { name, description, parentCategory, isActive, order } = req.body;
 
+        if (!name || !String(name).trim()) {
+            return res.status(400).json({
+                success: false,
+                message: 'Category name is required'
+            });
+        }
+
         // Check if category name already exists
-        const existingCategory = await Category.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
+        const existingCategory = await Category.findOne({ name: { $regex: new RegExp(`^${String(name).trim()}$`, 'i') } });
         if (existingCategory) {
             return res.status(400).json({
                 success: false,
@@ -686,11 +693,11 @@ exports.createCategory = async (req, res) => {
         }
 
         const categoryData = {
-            name,
+            name: String(name).trim(),
             description,
             parentCategory: parentCategory || null,
-            isActive: isActive !== undefined ? isActive : true,
-            order: order || 0
+            isActive: isActive !== undefined ? String(isActive).toLowerCase() === 'true' : true,
+            order: Number(order || 0)
         };
 
         if (imageData) {
@@ -706,6 +713,21 @@ exports.createCategory = async (req, res) => {
         });
     } catch (error) {
         console.error('Create category error:', error);
+
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({
+                success: false,
+                message: Object.values(error.errors).map((val) => val.message).join(', ')
+            });
+        }
+
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid category data provided'
+            });
+        }
+
         res.status(500).json({
             success: false,
             message: 'Error creating category',
@@ -734,9 +756,9 @@ exports.updateCategory = async (req, res) => {
         }
 
         // Check if new name conflicts with existing category
-        if (name && name !== category.name) {
+        if (name && String(name).trim() !== category.name) {
             const existingCategory = await Category.findOne({ 
-                name: { $regex: new RegExp(`^${name}$`, 'i') },
+                name: { $regex: new RegExp(`^${String(name).trim()}$`, 'i') },
                 _id: { $ne: req.params.id }
             });
             if (existingCategory) {
@@ -762,11 +784,11 @@ exports.updateCategory = async (req, res) => {
         }
 
         // Update fields
-        if (name) category.name = name;
+        if (name) category.name = String(name).trim();
         if (description !== undefined) category.description = description;
         if (parentCategory !== undefined) category.parentCategory = parentCategory || null;
-        if (isActive !== undefined) category.isActive = isActive;
-        if (order !== undefined) category.order = order;
+        if (isActive !== undefined) category.isActive = String(isActive).toLowerCase() === 'true';
+        if (order !== undefined) category.order = Number(order || 0);
 
         await category.save();
 
@@ -777,6 +799,21 @@ exports.updateCategory = async (req, res) => {
         });
     } catch (error) {
         console.error('Update category error:', error);
+
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({
+                success: false,
+                message: Object.values(error.errors).map((val) => val.message).join(', ')
+            });
+        }
+
+        if (error.name === 'CastError') {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid category data provided'
+            });
+        }
+
         res.status(500).json({
             success: false,
             message: 'Error updating category',

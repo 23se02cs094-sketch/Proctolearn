@@ -65,15 +65,31 @@ const uploadToCloudinary = async (file, folder = 'products') => {
         throw new Error('No file provided for upload');
     }
 
-    console.log('uploadToCloudinary called with file:', file.name, 'tempFilePath:', file.tempFilePath);
-    const filePath = file.tempFilePath || file;
-    console.log('Using filePath:', filePath);
-
     try {
-        const result = await cloudinary.uploader.upload(filePath, {
-            folder,
-            resource_type: 'auto'
-        });
+        let result;
+
+        if (file.tempFilePath) {
+            console.log('uploadToCloudinary using temp file path:', file.tempFilePath);
+            result = await cloudinary.uploader.upload(file.tempFilePath, {
+                folder,
+                resource_type: 'auto'
+            });
+        } else if (file.data) {
+            console.log('uploadToCloudinary using in-memory buffer for:', file.name || 'file');
+            result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder, resource_type: 'auto' },
+                    (error, uploadResult) => {
+                        if (error) return reject(error);
+                        resolve(uploadResult);
+                    }
+                );
+                stream.end(file.data);
+            });
+        } else {
+            throw new Error('Invalid file payload for Cloudinary upload');
+        }
+
         console.log('✅ Upload successful:', result.public_id);
         return result;
     } catch (error) {
