@@ -2,7 +2,9 @@ import axios from "axios";
 
 // Create axios instance with base configuration
 export const axiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    baseURL:
+        import.meta.env.VITE_API_BASE_URL ||
+        "https://resin-world-backend.onrender.com/api",
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",

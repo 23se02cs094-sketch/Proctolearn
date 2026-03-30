@@ -4,6 +4,7 @@ import { getAllProducts, createProduct, updateProduct, deleteProduct } from "../
 import { getCategories } from "../../services/operations/categoryService";
 import { apiConnector } from "../../services/apiConnector";
 import { adminEndpoints } from "../../services/api";
+import { uploadMultipleImages } from "../../services/cloudinaryService";
 import { Loader } from "../common";
 import {
     Plus,
@@ -212,9 +213,25 @@ const Products = () => {
             }
         } catch (error) {
             console.error("Image upload error:", error);
-            toast.error(error.response?.data?.message || "Failed to upload files", { id: toastId });
+
+            // Fallback: upload directly to Cloudinary when backend upload fails.
+            try {
+                const uploadedViaCloudinary = await uploadMultipleImages(files);
+                if (uploadedViaCloudinary?.length) {
+                    setUploadedImages((prev) => [...prev, ...uploadedViaCloudinary]);
+                    toast.success(`${uploadedViaCloudinary.length} file(s) uploaded successfully`, { id: toastId });
+                } else {
+                    toast.error("Failed to upload files", { id: toastId });
+                }
+            } catch (cloudinaryError) {
+                console.error("Cloudinary fallback upload error:", cloudinaryError);
+                const backendMessage = error.response?.data?.message;
+                const cloudinaryMessage = cloudinaryError?.response?.data?.error?.message || cloudinaryError?.message;
+                toast.error(backendMessage || cloudinaryMessage || "Failed to upload files", { id: toastId });
+            }
         } finally {
             setUploading(false);
+            e.target.value = "";
         }
     };
     

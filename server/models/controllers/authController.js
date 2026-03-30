@@ -3,6 +3,17 @@ const OTP = require('../OTP');
 const sendEmail = require('../mails/sendEmail');
 const crypto = require('crypto');
 
+const normalizePhoneNumber = (rawPhone) => {
+    const digits = String(rawPhone || '').replace(/\D/g, '');
+
+    if (!digits) return '';
+    if (digits.length === 10) return digits;
+    if (digits.length === 11 && digits.startsWith('0')) return digits.slice(1);
+    if (digits.length === 12 && digits.startsWith('91')) return digits.slice(2);
+
+    return null;
+};
+
 // @desc    Send OTP to email for registration
 // @route   POST /api/auth/send-otp
 // @access  Public
@@ -118,6 +129,14 @@ exports.verifyOTP = async (req, res) => {
 exports.register = async (req, res) => {
     try {
         const { name, email, password, phone, otp } = req.body;
+        const normalizedPhone = normalizePhoneNumber(phone);
+
+        if (normalizedPhone === null) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please enter a valid 10-digit phone number'
+            });
+        }
 
         // Verify OTP first
         const otpRecord = await OTP.findOne({ email }).sort({ createdAt: -1 });
@@ -138,17 +157,17 @@ exports.register = async (req, res) => {
             });
         }
 
-        // Delete OTP after successful verification
-        await OTP.deleteMany({ email });
-
         // Create user with isVerified set to true (since OTP was verified)
         const user = await User.create({
             name,
             email,
             password,
-            phone,
+            phone: normalizedPhone,
             isVerified: true
         });
+
+        // Delete OTP after successful user creation
+        await OTP.deleteMany({ email });
 
         res.status(201).json({
             success: true,

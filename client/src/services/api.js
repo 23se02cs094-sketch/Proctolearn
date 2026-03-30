@@ -1,5 +1,7 @@
 // API Base URL
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL =
+    import.meta.env.VITE_API_BASE_URL ||
+    "https://resin-world-backend.onrender.com/api";
 
 // ==================== AUTH ENDPOINTS ====================
 export const authEndpoints = {
@@ -32,7 +34,7 @@ export const productEndpoints = {
     GET_ALL_PRODUCTS: `${BASE_URL}/products`,
     GET_PRODUCT: (productId) => `${BASE_URL}/products/${productId}`,
     GET_FEATURED_PRODUCTS: `${BASE_URL}/products/featured`,
-    GET_PRODUCTS_BY_CATEGORY: (categoryId) => `${BASE_URL}/products/category/${categoryId}`,
+    GET_PRODUCTS_BY_CATEGORY: (categoryId) => `${BASE_URL}/products/category/${encodeURIComponent(categoryId)}`,
     SEARCH_PRODUCTS: `${BASE_URL}/products/search`,
     GET_RELATED_PRODUCTS: (productId) => `${BASE_URL}/products/${productId}/related`,
 };

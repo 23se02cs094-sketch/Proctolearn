@@ -5,6 +5,17 @@ import { sendOtp } from "../../services/operations/authService";
 import { setSignupData } from "../../redux/slices/authSlice";
 import { Eye, EyeOff, Mail, Lock, User, Phone, Loader } from "lucide-react";
 
+const normalizePhoneNumber = (rawPhone) => {
+    const digits = String(rawPhone || "").replace(/\D/g, "");
+
+    if (!digits) return "";
+    if (digits.length === 10) return digits;
+    if (digits.length === 11 && digits.startsWith("0")) return digits.slice(1);
+    if (digits.length === 12 && digits.startsWith("91")) return digits.slice(2);
+
+    return null;
+};
+
 const Signup = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -61,6 +72,11 @@ const Signup = () => {
         } else if (password !== confirmPassword) {
             newErrors.confirmPassword = "Passwords do not match";
         }
+
+        const normalizedPhone = normalizePhoneNumber(phone);
+        if (normalizedPhone === null) {
+            newErrors.phone = "Enter a valid 10-digit phone number";
+        }
         
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -72,7 +88,13 @@ const Signup = () => {
         if (!validateForm()) return;
         
         // Store signup data for later use after OTP verification
-        dispatch(setSignupData({ name, email, phone, password }));
+        const normalizedPhone = normalizePhoneNumber(phone);
+        dispatch(setSignupData({
+            name,
+            email,
+            phone: normalizedPhone || "",
+            password,
+        }));
         
         // Send OTP to email
         dispatch(sendOtp(email, navigate));
@@ -159,10 +181,13 @@ const Signup = () => {
                                 name="phone"
                                 value={phone}
                                 onChange={handleChange}
-                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
+                                className={`w-full pl-10 pr-4 py-3 border ${errors.phone ? "border-red-500" : "border-gray-300"} rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all`}
                                 placeholder="Enter your phone number"
                             />
                         </div>
+                        {errors.phone && (
+                            <p className="mt-1 text-sm text-red-500">{errors.phone}</p>
+                        )}
                     </div>
                     
                     {/* Password */}
