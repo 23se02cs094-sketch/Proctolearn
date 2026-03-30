@@ -4,7 +4,7 @@ import axios from "axios";
 const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dwriugkmb";
 const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "";
 
-const PRESET_FALLBACKS = ["ml_default"];
+const PRESET_FALLBACKS = [];
 
 const getCandidatePresets = () => {
     return [...new Set([CLOUDINARY_UPLOAD_PRESET, ...PRESET_FALLBACKS].filter(Boolean))];
@@ -13,6 +13,10 @@ const getCandidatePresets = () => {
 const isPresetError = (error) => {
     const message = error?.response?.data?.error?.message || error?.message || "";
     return /preset/i.test(String(message));
+};
+
+export const isCloudinaryDirectUploadConfigured = () => {
+    return Boolean(CLOUDINARY_CLOUD_NAME && CLOUDINARY_UPLOAD_PRESET);
 };
 
 /**

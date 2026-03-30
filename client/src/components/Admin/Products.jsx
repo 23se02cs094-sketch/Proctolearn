@@ -4,7 +4,10 @@ import { getAllProducts, createProduct, updateProduct, deleteProduct } from "../
 import { getCategories } from "../../services/operations/categoryService";
 import { apiConnector } from "../../services/apiConnector";
 import { adminEndpoints } from "../../services/api";
-import { uploadMultipleImages } from "../../services/cloudinaryService";
+import {
+    uploadMultipleImages,
+    isCloudinaryDirectUploadConfigured,
+} from "../../services/cloudinaryService";
 import { Loader } from "../common";
 import {
     Plus,
@@ -214,6 +217,19 @@ const Products = () => {
         } catch (error) {
             console.error("Image upload error:", error);
 
+            const isBackendNetworkError =
+                error?.code === "ERR_NETWORK" ||
+                error?.message?.includes("Network Error");
+            const backendMessage = error?.response?.data?.message;
+
+            if (isBackendNetworkError && !isCloudinaryDirectUploadConfigured()) {
+                toast.error(
+                    "Backend server is not reachable. Start backend on port 5000 or configure VITE_API_BASE_URL.",
+                    { id: toastId }
+                );
+                return;
+            }
+
             // Fallback: upload directly to Cloudinary when backend upload fails.
             try {
                 const uploadedViaCloudinary = await uploadMultipleImages(files);
@@ -225,7 +241,6 @@ const Products = () => {
                 }
             } catch (cloudinaryError) {
                 console.error("Cloudinary fallback upload error:", cloudinaryError);
-                const backendMessage = error.response?.data?.message;
                 const cloudinaryMessage = cloudinaryError?.response?.data?.error?.message || cloudinaryError?.message;
                 toast.error(backendMessage || cloudinaryMessage || "Failed to upload files", { id: toastId });
             }
