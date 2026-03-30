@@ -1,7 +1,9 @@
 // API Base URL
 const BASE_URL =
     import.meta.env.VITE_API_BASE_URL ||
-    "https://proctolearn-ten.vercel.app/api";
+    (import.meta.env.PROD
+        ? `${window.location.origin}/api`
+        : "http://localhost:5000/api");
 
 // ==================== AUTH ENDPOINTS ====================
 export const authEndpoints = {

@@ -4,7 +4,9 @@ import axios from "axios";
 export const axiosInstance = axios.create({
     baseURL:
         import.meta.env.VITE_API_BASE_URL ||
-        "https://proctolearn-ten.vercel.app/api",
+        (import.meta.env.PROD
+            ? `${window.location.origin}/api`
+            : "http://localhost:5000/api"),
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",
