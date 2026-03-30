@@ -22,6 +22,9 @@ const corsOptions = {
     origin: function (origin, callback) {
         // Allow requests with no origin (mobile apps, curl, etc.)
         const allowedOrigins = [
+            "https://proctolearn-ol2k.vercel.app",
+            "https://proctolearn-ten.vercel.app/api",
+            "https://proctolearn-ten.vercel.app",
             'http://localhost:5173',
             'http://localhost:3000',
             "https://proctolearn-smoky.vercel.app",
