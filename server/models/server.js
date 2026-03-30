@@ -176,10 +176,13 @@ app.use((err, req, res, next) => {
 
 // ==================== START SERVER ====================
 
-const PORT = process.env.PORT || 5000;
+const isVercel = process.env.VERCEL === '1';
+let server = null;
 
-const server = app.listen(PORT, () => {
-    console.log(`
+if (!isVercel) {
+    const PORT = process.env.PORT || 5000;
+    server = app.listen(PORT, () => {
+        console.log(`
 ╔═══════════════════════════════════════════════════════╗
 ║                                                       ║
 ║     🎨 THE RESIN WORLD - Backend Server              ║
@@ -190,14 +193,19 @@ const server = app.listen(PORT, () => {
 ║                                                       ║
 ╚═══════════════════════════════════════════════════════╝
     `);
-});
+    });
+}
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
     console.error(`❌ Unhandled Rejection: ${err.message}`);
-    server.close(() => {
+    if (server) {
+        server.close(() => {
+            process.exit(1);
+        });
+    } else {
         process.exit(1);
-    });
+    }
 });
 
 // Handle uncaught exceptions
