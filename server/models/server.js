@@ -25,6 +25,8 @@ const corsOptions = {
             'http://localhost:5173',
             'http://localhost:3000',
             "https://proctolearn-smoky.vercel.app",
+            "https://proctolearn-yfl8.vercel.app/api",
+            "https://proctolearn-yfl8.vercel.app",
             process.env.FRONTEND_URL
         ].filter(Boolean);
         
