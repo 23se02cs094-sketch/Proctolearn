@@ -4,7 +4,7 @@ import axios from "axios";
 export const axiosInstance = axios.create({
     baseURL:
         import.meta.env.VITE_API_BASE_URL ||
-        "https://resin-world-backend.onrender.com/api",
+        "https://proctolearn-ten.vercel.app/api",
     withCredentials: true,
     headers: {
         "Content-Type": "application/json",

@@ -1,7 +1,7 @@
 // API Base URL
 const BASE_URL =
     import.meta.env.VITE_API_BASE_URL ||
-    "https://resin-world-backend.onrender.com/api";
+    "https://proctolearn-ten.vercel.app/api";
 
 // ==================== AUTH ENDPOINTS ====================
 export const authEndpoints = {
